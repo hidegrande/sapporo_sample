@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>札幌のうた</title>
+<meta name="description" content="札幌のうた – 冬の地下鉄、チカホ、味噌ラーメン、道民の日常を歌に。">
+
+<!-- OGP -->
+<meta property="og:title" content="札幌のうた">
+<meta property="og:description" content="冬は地上に出ない、地下鉄が正義。チカホ抜けたら、もう大通。">
+<meta property="og:type" content="music.song">
+<meta property="og:image" content="https://img.youtube.com/vi/o-NhIGOcRZw/maxresdefault.jpg">
+<meta property="og:url" content="https://hidegrande.github.io/sapporo-song/">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0e1419;
+  --bg-soft: #151c23;
+  --bg-elevated: #1a2229;
+  --text: #e8eef4;
+  --text-dim: #8a98a8;
+  --text-muted: #5a6573;
+  --accent: #d4a574;       /* 街灯の暖色 */
+  --accent-soft: #b8895a;
+  --snow: #f5f8fb;
+  --line: rgba(232, 238, 244, 0.08);
+  --line-strong: rgba(232, 238, 244, 0.16);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* 雪の演出 */
+.snow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.snow span {
+  position: absolute;
+  top: -10px;
+  color: var(--snow);
+  opacity: 0;
+  font-size: 10px;
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  0%   { transform: translateY(-10vh) translateX(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(110vh) translateX(40px); opacity: 0; }
+}
+
+/* 背景グラデーション */
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(212, 165, 116, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(116, 165, 212, 0.06) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ヘッダー */
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeUp 1s ease-out;
+}
+
+.header .label {
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: clamp(40px, 9vw, 64px);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  background: linear-gradient(180deg, var(--snow) 0%, var(--text-dim) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header .credit {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* プレーヤー */
+.player {
+  margin-bottom: 64px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--line);
+  animation: fadeUp 1.2s ease-out 0.2s both;
+}
+
+.player-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: #000;
+}
+
+.player-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* セクション区切り */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 56px 0 32px;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.divider span {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.3em;
+}
+
+/* 歌詞 */
+.lyrics {
+  animation: fadeUp 1.4s ease-out 0.4s both;
+}
+
+.section {
+  margin-bottom: 36px;
+}
+
+.section-label {
+  display: inline-block;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 14px;
+  padding: 4px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.section.chorus .section-label {
+  color: var(--snow);
+  border-color: var(--snow);
+  background: rgba(245, 248, 251, 0.06);
+}
+
+.section p {
+  font-size: 17px;
+  line-height: 2.1;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.section.chorus p {
+  font-weight: 500;
+  color: var(--snow);
+}
+
+.section .annotation {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: 0.3em;
+}
+
+/* フッター */
+.footer {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.footer a {
+  color: var(--accent-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent-soft);
+}
+
+/* アニメーション */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* スマホ最適化 */
+@media (max-width: 480px) {
+  .container { padding: 32px 20px 60px; }
+  .header { margin-bottom: 36px; }
+  .player { margin-bottom: 48px; }
+  .section p { font-size: 16px; line-height: 2.0; }
+  .divider { margin: 44px 0 28px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="snow" id="snow"></div>
+
+<div class="container">
+
+  <header class="header">
+    <div class="label">Sapporo Song</div>
+    <h1>札幌のうた</h1>
+    <div class="credit">words &amp; music — Hide</div>
+  </header>
+
+  <div class="player">
+    <div class="player-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/o-NhIGOcRZw"
+        title="札幌のうた"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="divider"><span>歌 詞</span></div>
+
+  <div class="lyrics">
+
+    <div class="section">
+      <div class="section-label">Intro</div>
+      <p>雪が降っても　傘はささない（それが流儀）<br>
+      家の中はあったかい　冬でもアイス食べる</p>
+    </div>
+
+    <div class="section chorus">
+      <div class="section-label">Chorus</div>
+      <p>冬は地上に出ない　地下鉄が正義<br>
+      チカホ抜けたら　もう大通<br>
+      新幹線の駅　ずっと建設中<br>
+      来るのはいつなの　まだ夢の途中</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Verse 1</div>
+      <p>新千歳から　快速エアポート<br>
+      うとうとしてたら　もう札幌<br>
+      時計台　思ったより小さい<span class="annotation">（って、みんな言う）</span><br>
+      住所は「北三条西四丁目」　呪文みたいな番地</p>
+    </div>
+
+    <div class="section chorus">
+      <div class="section-label">Chorus</div>
+      <p>冬は地上に出ない　地下鉄が正義<br>
+      チカホ抜けたら　もう大通<br>
+      サッポロクラシックで　とりあえず乾杯<br>
+      北海道限定　道民の正解</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Verse 2</div>
+      <p>味噌ラーメン　純連発の純すみ系<br>
+      ラードで蓋して　最後まであつあつ<br>
+      スープカレー　ジンギスカン　メロンソフト<br>
+      セコマでホットシェフ　カツ丼ぬくぬく</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Verse 3</div>
+      <p>北大広すぎ　東京ドーム38個分<br>
+      自転車ないと　次の講義に間に合わない<br>
+      発寒（はっさむ）　簾舞（みすまい）　月寒（つきさむ）<br>
+      読めない言葉　アイヌが生きてる<br>
+      やき弁　ガラナ　カツゲン　道民の日常</p>
+    </div>
+
+    <div class="section chorus">
+      <div class="section-label">Chorus</div>
+      <p>冬は地上に出ない　地下鉄が正義<br>
+      チカホ抜けたら　もう大通<br>
+      寿司ならトリトン　根室花まる　2時間待ち<br>
+      GWの桜　全国で一番遅い</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Verse 4</div>
+      <p>ススキノの夜　ニッカの看板　光る<br>
+      マックの地下で　生バンドカラオケ　俺スタジオ<br>
+      〆はラーメンじゃなくて　パフェがトレンド<br>
+      タクシーは終電後　まじで捕まらない</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Bridge</div>
+      <p>狸小路　昭和とイマドキが混ざってる<br>
+      YOSAKOIに雪まつり　毎年あつくなってる<br>
+      エスコンは球場じゃなくて　テーマパーク<br>
+      試合がない日も　一日いられる</p>
+    </div>
+
+    <div class="section chorus">
+      <div class="section-label">Chorus</div>
+      <p>冬は地上に出ない　地下鉄が正義<br>
+      チカホ抜けたら　もう大通<br>
+      「何もない」って言うのは道民だけ<br>
+      来てみたら全部ある　また札幌で会おう</p>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    © Hide ／ <a href="https://youtu.be/o-NhIGOcRZw" target="_blank" rel="noopener">YouTubeで聴く</a>
+  </footer>
+
+</div>
+
+<script>
+// 雪のアニメーション
+(function () {
+  const snow = document.getElementById('snow');
+  const flakes = ['❄', '✦', '·', '·', '·'];
+  const count = 40;
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('span');
+    s.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.fontSize = (Math.random() * 10 + 6) + 'px';
+    s.style.animationDuration = (Math.random() * 12 + 10) + 's';
+    s.style.animationDelay = (Math.random() * -20) + 's';
+    s.style.opacity = Math.random() * 0.5 + 0.3;
+    snow.appendChild(s);
+  }
+})();
+</script>
+
+</body>
+</html>
